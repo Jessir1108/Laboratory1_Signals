@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import streamlit as st
 import sk_dsp_comm.sigsys as ss
 
+
 #TITULOS
 st.sidebar.title('Laboratorio 1 - Señales y sistemas')
 st.sidebar.subheader("Jessir Daniel Florez Hamburger - Mateo Jose Muñoz - Dylan Abuchaibe")
@@ -69,12 +70,12 @@ elif opcion == "Cuadratica":
     st.title("Función Cuadrática")
     st.latex("ax^2+2bx+c")
 
-    val2=st.number_input("Ingrese el valor de la constante A: ",step=1,min_value=0,max_value=10)
+    Escal=st.number_input("Ingrese el valor de la constante A: ",step=1,min_value=0,max_value=10)
     B=st.number_input("Ingrese el valor de la constante B: ",step=1,min_value=0,max_value=10)
     C=st.number_input("Ingrese el valor de la cosntante C: ",step=1,min_value=0,max_value=10)
 
     x = np.arange(-10,10,.01)
-    y = val2*x**2+B*x+C
+    y = Escal*x**2+B*x+C
         
     
     fig,ax=plt.subplots()
@@ -91,11 +92,11 @@ elif opcion == "Exponencial":
     st.title("Funcion Exponencial")
     st.latex("y(t)=Ae^{-bt}")
 
-    val2=st.number_input("Ingrese el valor de la constante A: ",step=1,min_value=1,max_value=10)
+    Escal=st.number_input("Ingrese el valor de la constante A: ",step=1,min_value=1,max_value=10)
     b=st.number_input("Ingrese el valor de la constante b: ",step=1,min_value=-5,max_value=10)
     x= np.arange(0,2*np.pi,0.01)
     
-    y = val2*np.exp(-b*x)
+    y = Escal*np.exp(-b*x)
 
     fig,ax=plt.subplots()
     ax.plot(x,y)
@@ -202,35 +203,58 @@ transformaciones = st.sidebar.multiselect(
      'Escoja las transformaciones que desea realizar a continuación: ',
      ['Desplazamiento', 'Escalamiento en tiempo', 'Escalamiento en amplitud'])
 
-frames=5
+frames=10
+graficar=st.empty()
+
 if "Desplazamiento" in transformaciones:
     st.sidebar.subheader('Escoja a continuación cuantas unidades desea desplazar: ')
-    val = st.sidebar.number_input("",step=1,min_value=-5,max_value=5)
+    num = st.sidebar.number_input("",step=1,min_value=-5,max_value=5)
+    traslado=(x+num)
     
-    traslado=(x+val)
     for i in range(frames+1):   
         fig,ax=plt.subplots()
         ax.plot(x,y)
-        ax.plot(x+i*(val)/frames,y,linestyle="dashed")
+        ax.plot(x+i*(num)/frames,y,linestyle="dashed")
         ax.legend(['Original', 'Desplazada'])
         ax.set_title("Función Seno")
         ax.set_xlabel("Eje x")
         ax.set_ylabel("Eje y")
         ax.grid(True)
-        st.pyplot(fig)
+        graficar.pyplot(fig)
         
-        if "Escalamiento en tiempo" in transformaciones:
-            st.sidebar.subheader('Escoja a continuación cuantas unidades desea escalar: ')
-            val2 = st.sidebar.number_input("",step=1,min_value=-3,max_value=3)
+    if "Escalamiento en amplitud" in transformaciones:
+        st.sidebar.subheader('Escoja a continuación cuantas unidades desea escalar: ')
+        Escal= st.sidebar.number_input("",step=1,min_value=-3,max_value=3)
             
-            traslado=(x*(1/val2))
+        Escal=(y*Escal)
+
+        for i in range(frames+1):   
+            fig,ax=plt.subplots()
+            ax.plot(x,y)
+            ax.plot(traslado, y*(1 + i*(Escal-1)/frames),linestyle="dashed")
+            ax.legend(['Original', 'Desplazada'])
+            ax.set_title("Función Seno")
+            ax.set_xlabel("Eje x")
+            ax.set_ylabel("Eje y")
+            ax.grid(True)
+            graficar.pyplot(fig)
+
+
+        if "Escalamiento en tiempo" in transformaciones:
+            st.sidebar.subheader('Escoja a continuación cuantas unidades desea escalar en el tiempo: ')
+            Escal_time= st.sidebar.number_input("",step=1,min_value=-4,max_value=4)
+                
+            Escal_time=(x*Escal_time)
+
             for i in range(frames+1):   
                 fig,ax=plt.subplots()
                 ax.plot(x,y)
-                ax.plot(x,y*(1 + i*(val2-1)/frames),linestyle="dashed")
+                ax.plot(traslado, y*(1 + i*(Escal_time-1)/frames),linestyle="dashed")
                 ax.legend(['Original', 'Desplazada'])
                 ax.set_title("Función Seno")
                 ax.set_xlabel("Eje x")
                 ax.set_ylabel("Eje y")
                 ax.grid(True)
-                st.pyplot(fig)
+                graficar.pyplot(fig)
+
+    
