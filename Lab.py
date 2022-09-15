@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import streamlit as st
 import sk_dsp_comm.sigsys as ss
 
-
 #TITULOS
 st.sidebar.title('Laboratorio 1 - Señales y sistemas')
 st.sidebar.subheader("Jessir Daniel Florez Hamburger - Mateo Jose Muñoz - Dylan Abuchaibe")
@@ -184,7 +183,10 @@ if opcion=="Secuencia de impulsos":
 
     if len(x)!=len(y):
         st.error('Debe ingresar longitudes iguales para que pueda graficarse correctamente')
-            
+
+    elif len(x) == 0 or len(y) ==0:
+        st.error('Debe ingresar valores a los vectores')
+    
     else:
         fig, ax = plt.subplots()
         ax.stem(x,y)
